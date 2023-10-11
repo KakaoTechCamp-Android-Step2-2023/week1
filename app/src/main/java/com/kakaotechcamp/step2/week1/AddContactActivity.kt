@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -29,14 +30,18 @@ class AddContactActivity : AppCompatActivity() {
     private lateinit var groupMore: Group
     private lateinit var toast: Toast
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            confirmToFinish()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
         initViews()
-    }
 
-    override fun onBackPressed() {
-        confirmToFinish()
+        onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     private fun initViews() {
