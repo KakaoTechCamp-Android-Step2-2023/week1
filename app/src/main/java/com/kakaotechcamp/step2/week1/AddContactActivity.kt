@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 class AddContactActivity : AppCompatActivity() {
 
@@ -31,6 +34,7 @@ class AddContactActivity : AppCompatActivity() {
     private lateinit var viewMore: View
     private lateinit var groupMore: Group
     private lateinit var toast: Toast
+    private val dateFormat = SimpleDateFormat(DATE_FORMAT)
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -115,12 +119,23 @@ class AddContactActivity : AppCompatActivity() {
 
     private fun showDatePickerDialog() {
         DatePickerDialog(this).apply {
-            updateDate(2000, 0, 1)
+            val calendar = getBirthdayCalendar()
+            getBirthdayCalendar().apply {
+                updateDate(get(Calendar.YEAR), get(Calendar.MONTH), get(Calendar.DATE))
+            }
             setOnDateSetListener { _, year, month, dayOfMonth ->
-                tvBirthday.text = "$year.${month.inc()}.$dayOfMonth"
+                calendar.set(year, month, dayOfMonth)
+                tvBirthday.text = dateFormat.format(calendar.time)
             }
             show()
         }
+    }
+
+    private fun getBirthdayCalendar(): Calendar {
+        val birthdayText =
+            if (tvBirthday.text.isNotEmpty()) tvBirthday.text.toString() else DEFAULT_BIRTHDAY
+        val birthdayDate = dateFormat.parse(birthdayText) ?: Date()
+        return Calendar.getInstance().apply { time = birthdayDate }
     }
 
     private fun checkDataValidation(): Boolean {
@@ -165,5 +180,10 @@ class AddContactActivity : AppCompatActivity() {
                 show()
             }
         }
+    }
+
+    companion object {
+        private const val DEFAULT_BIRTHDAY = "2000.01.01"
+        private const val DATE_FORMAT = "yyyy.MM.dd"
     }
 }
