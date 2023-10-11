@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding"
+    android:id="@+id/ll_contact_item">
+
+    <TextView
+        android:id="@+id/tv_short_name"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="@dimen/tv_short_name_size"
+        android:layout_height="@dimen/tv_short_name_size"
+        android:background="@drawable/gradient_circle"
+        android:gravity="center"
+        android:padding="@dimen/default_padding"
+        android:textColor="@color/white"
+        tools:text="아" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/default_padding"
+        android:ellipsize="end"
+        android:hint="@string/name"
+        android:maxLines="1" />
+
+</LinearLayout>

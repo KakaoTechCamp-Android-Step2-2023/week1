@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Week1"
         tools:targetApi="33">
         <activity
+            android:name=".ContactDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddContactActivity"
             android:exported="false" />
         <activity

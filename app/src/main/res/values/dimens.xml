@@ -5,4 +5,5 @@
     <dimen name="small_padding">8dp</dimen>
     <dimen name="profile_size">120dp</dimen>
     <dimen name="et_height">48dp</dimen>
+    <dimen name="tv_short_name_size">60dp</dimen>
 </resources>
