@@ -1,9 +1,11 @@
 package com.kakaotechcamp.step2.week1
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -94,8 +96,8 @@ class AddContactActivity : AppCompatActivity() {
                 CONTACT_BIRTHDAY to tvBirthday.text.toString(),
                 CONTACT_GENDER to rgGender.run {
                     when (checkedRadioButtonId) {
-                        R.id.rb_female -> "female"
-                        R.id.rb_male -> "male"
+                        R.id.rb_female -> GENDER_FEMALE
+                        R.id.rb_male -> GENDER_MALE
                         else -> ""
                     }
                 },
@@ -122,21 +124,25 @@ class AddContactActivity : AppCompatActivity() {
     }
 
     private fun checkDataValidation(): Boolean {
-        etName.apply {
-            if (text.isNullOrEmpty()) {
-                showToast(R.string.warning_empty_name)
-                setSelection(0)
-                return false
-            }
+        etName.checkEmpty(R.string.warning_empty_name).also { isNullOrEmpty ->
+            if (isNullOrEmpty) return false
         }
-        etPhoneNumber.apply {
-            if (text.isNullOrEmpty()) {
-                showToast(R.string.warning_empty_phone_number)
-                setSelection(0)
-                return false
-            }
+        etPhoneNumber.checkEmpty(R.string.warning_empty_phone_number).also { isNullOrEmpty ->
+            if (isNullOrEmpty) return false
         }
         return true
+    }
+
+    private fun EditText.checkEmpty(@StringRes warningStringResId: Int): Boolean {
+        return text.isNullOrEmpty().also { isNullOrEmpty ->
+            if (isNullOrEmpty) {
+                showToast(warningStringResId)
+                (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {
+                    requestFocus()
+                    it.showSoftInput(this, 0)
+                }
+            }
+        }
     }
 
     private fun showToast(@StringRes stringResId: Int) {
@@ -147,7 +153,9 @@ class AddContactActivity : AppCompatActivity() {
     }
 
     private fun confirmToFinish() {
-        if (etName.text.isNotEmpty()) {
+        if (etName.text.isNullOrEmpty() && etPhoneNumber.text.isNullOrEmpty() && etMail.text.isNullOrEmpty() && tvBirthday.text.isNullOrEmpty() && etMemo.text.isNullOrEmpty()) {
+            finish()
+        } else {
             AlertDialog.Builder(this).apply {
                 setMessage(R.string.warning_cancel)
                 setPositiveButton(R.string.exit) { _, _ ->
@@ -156,8 +164,6 @@ class AddContactActivity : AppCompatActivity() {
                 setNegativeButton(R.string.write) { _, _ -> }
                 show()
             }
-        } else {
-            finish()
         }
     }
 }
