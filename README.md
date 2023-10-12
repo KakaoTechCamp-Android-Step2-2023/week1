@@ -23,7 +23,7 @@
 
 ## 3. 사용기술
 
-- 데이터 전달 : Intent, `registerForActivityResult`
+- 데이터 전달 : Intent, registerForActivityResult
 - UI (xml) : ConstraintLayout, LinearLayout, TextView, EditText, ImageView, RadioButton, FloatingActionButton, DatePickerDialog, AlertDialog
 - UI (compose) : Box, Row, Column, Text, Editable, Image, RadioButton,
 
