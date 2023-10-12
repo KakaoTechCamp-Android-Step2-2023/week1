@@ -3,9 +3,11 @@ package com.kakaotechcamp.step2.week1
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
 
@@ -15,6 +17,7 @@ class MainActivity : AppCompatActivity(), ContactItemView.OnItemClickListener {
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var addBtn: FloatingActionButton
     private lateinit var llContact: LinearLayout
+    private lateinit var tvEmptyNotice: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity(), ContactItemView.OnItemClickListener {
 
     private fun initViews() {
         llContact = findViewById(R.id.ll_contact)
+        tvEmptyNotice = findViewById(R.id.tv_empty_notice)
         addBtn = findViewById<FloatingActionButton?>(R.id.fab_add).apply {
             setOnClickListener {
                 val intent = Intent(context, AddContactActivity::class.java)
@@ -47,6 +51,8 @@ class MainActivity : AppCompatActivity(), ContactItemView.OnItemClickListener {
     }
 
     private fun addContactItemView(contactJsonString: String) {
+        tvEmptyNotice.isVisible = false
+
         ContactItemView(this).apply {
             setContactData(contactJsonString)
             setOnItemClickListener(this@MainActivity)

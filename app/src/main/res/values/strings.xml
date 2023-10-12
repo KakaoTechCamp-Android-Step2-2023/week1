@@ -18,4 +18,5 @@
     <string name="exit">나가기</string>
     <string name="write">작성하기</string>
     <string name="profile_image">프로필 이미지</string>
+    <string name="empty_notice">오른쪽 + 버튼을 클릭하여\n연락처를 등록해보세요.</string>
 </resources>

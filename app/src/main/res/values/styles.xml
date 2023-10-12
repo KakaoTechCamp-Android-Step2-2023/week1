@@ -6,4 +6,13 @@
         <item name="android:textColor">@color/fgPrimary</item>
         <item name="android:textColorHint">@color/fgTertiary</item>
     </style>
+
+    <style name="detailTitleTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/fgPrimary</item>
+    </style>
+
+    <style name="contentTitleTextStyle" parent="detailTitleTextStyle">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

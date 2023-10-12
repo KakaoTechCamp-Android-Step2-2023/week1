@@ -105,7 +105,7 @@ class AddContactActivity : AppCompatActivity() {
                         else -> ""
                     }
                 },
-                CONTACT_MEMO to etPhoneNumber.text.toString(),
+                CONTACT_MEMO to etMemo.text.toString(),
             )
         )
     }
