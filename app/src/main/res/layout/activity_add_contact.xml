@@ -209,7 +209,7 @@
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow_btns"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/btn_height"
         android:layout_margin="@dimen/small_padding"
         app:constraint_referenced_ids="tv_cancel, tv_save"
         app:flow_horizontalGap="@dimen/small_padding"
