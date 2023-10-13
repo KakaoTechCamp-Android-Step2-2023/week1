@@ -2,9 +2,14 @@
 
 package com.kakaotechcamp.step2.week1.compose
 
+import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -49,6 +54,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.kakaotechcamp.step2.week1.CONTACT_BIRTHDAY
+import com.kakaotechcamp.step2.week1.CONTACT_DATA
 import com.kakaotechcamp.step2.week1.CONTACT_GENDER
 import com.kakaotechcamp.step2.week1.CONTACT_MAIL
 import com.kakaotechcamp.step2.week1.CONTACT_MEMO
@@ -59,9 +65,13 @@ import com.kakaotechcamp.step2.week1.GENDER_MALE
 import com.kakaotechcamp.step2.week1.R
 import com.kakaotechcamp.step2.week1.compose.ui.theme.Typography
 import com.kakaotechcamp.step2.week1.compose.ui.theme.Week1Theme
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 class ComposeAddContactActivity : ComponentActivity() {
-    private val inputs = mutableMapOf<String, String>(
+    private val inputs = mutableMapOf(
         CONTACT_NAME to "",
         CONTACT_PHONE_NUMBER to "",
         CONTACT_MAIL to "",
@@ -69,12 +79,25 @@ class ComposeAddContactActivity : ComponentActivity() {
         CONTACT_GENDER to "",
         CONTACT_MEMO to "",
     )
+    private val dateFormat = SimpleDateFormat(DATE_FORMAT)
+    private lateinit var toast: Toast
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            confirmToFinish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContent {
+        initViews()
+        onBackPressedDispatcher.addCallback(onBackPressedCallback)
+    }
 
+    private fun initViews() {
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
+
+        setContent {
             Week1Theme {
                 // A surface container using the 'background' color from the theme
                 Column(
@@ -131,10 +154,8 @@ class ComposeAddContactActivity : ComponentActivity() {
 
                         AnimatedVisibility(visible = visible) {
                             Column {
-                                ContactTextField(
-                                    hint = stringResource(id = R.string.birthday)
-                                ) { textValue ->
-                                    inputs[CONTACT_BIRTHDAY] = textValue
+                                Birthday {
+                                    showDatePickerDialog()
                                 }
                                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.small_padding)))
                                 GenderRadioGroup()
@@ -159,11 +180,7 @@ class ComposeAddContactActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxHeight()
-                                    .clickable {
-                                        confirmToFinish(
-                                            inputs.values.any { it.isNotEmpty() }
-                                        )
-                                    },
+                                    .clickable { confirmToFinish() },
                                 text = stringResource(id = R.string.cancel),
                                 style = Typography.titleLarge,
                                 textAlign = TextAlign.Center,
@@ -173,8 +190,10 @@ class ComposeAddContactActivity : ComponentActivity() {
                                     .weight(1f)
                                     .fillMaxHeight()
                                     .clickable {
-                                        confirmToFinish(
-                                            inputs.values.any { it.isNotEmpty() })
+                                        if (checkDataValidation()) {
+                                            sendContactData()
+                                            finish()
+                                        }
                                     },
                                 text = stringResource(id = R.string.save),
                                 style = Typography.titleLarge,
@@ -187,8 +206,76 @@ class ComposeAddContactActivity : ComponentActivity() {
         }
     }
 
-    private fun confirmToFinish(hasInputs: Boolean) {
-        if (hasInputs) {
+    private fun extractData(): JSONObject {
+        return JSONObject(
+            mapOf(
+                CONTACT_NAME to inputs.getOrDefault(CONTACT_NAME, ""),
+                CONTACT_PHONE_NUMBER to inputs.getOrDefault(CONTACT_PHONE_NUMBER, ""),
+                CONTACT_MAIL to inputs.getOrDefault(CONTACT_MAIL, ""),
+                CONTACT_BIRTHDAY to inputs.getOrDefault(CONTACT_BIRTHDAY, ""),
+                CONTACT_GENDER to inputs.getOrDefault(CONTACT_GENDER, ""),
+                CONTACT_MEMO to inputs.getOrDefault(CONTACT_MEMO, ""),
+            )
+        )
+    }
+
+    private fun sendContactData() {
+        Intent(this, ComposeMainActivity::class.java).apply {
+            putExtra(CONTACT_DATA, extractData().toString())
+            setResult(RESULT_OK, this)
+        }
+    }
+
+    private fun showDatePickerDialog() {
+        DatePickerDialog(this).apply {
+            val calendar = getBirthdayCalendar()
+            getBirthdayCalendar().apply {
+                updateDate(get(Calendar.YEAR), get(Calendar.MONTH), get(Calendar.DATE))
+            }
+            setOnDateSetListener { _, year, month, dayOfMonth ->
+                calendar.set(year, month, dayOfMonth)
+                inputs[CONTACT_BIRTHDAY] = dateFormat.format(calendar.time)
+            }
+            show()
+        }
+    }
+
+    private fun getBirthdayCalendar(): Calendar {
+        val birthdayText = inputs.getOrDefault(CONTACT_NAME, DEFAULT_BIRTHDAY)
+        val birthdayDate = dateFormat.parse(birthdayText) ?: Date()
+        return Calendar.getInstance().apply { time = birthdayDate }
+    }
+
+    private fun checkDataValidation(): Boolean {
+        inputs.getOrDefault(CONTACT_NAME, "").checkEmpty(R.string.warning_empty_name)
+            .also { isNullOrEmpty ->
+                if (isNullOrEmpty) return false
+            }
+        inputs.getOrDefault(CONTACT_PHONE_NUMBER, "")
+            .checkEmpty(R.string.warning_empty_phone_number)
+            .also { isNullOrEmpty ->
+                if (isNullOrEmpty) return false
+            }
+        return true
+    }
+
+    private fun String.checkEmpty(@StringRes warningStringResId: Int): Boolean {
+        return isEmpty().also { isEmpty ->
+            if (isEmpty) {
+                showToast(warningStringResId)
+            }
+        }
+    }
+
+    private fun showToast(@StringRes stringResId: Int) {
+        toast.apply {
+            setText(stringResId)
+            show()
+        }
+    }
+
+    private fun confirmToFinish() {
+        if (inputs.values.any { it.isNotEmpty() }) {
             AlertDialog.Builder(this).apply {
                 setMessage(R.string.warning_cancel)
                 setPositiveButton(R.string.exit) { _, _ ->
@@ -250,7 +337,7 @@ fun PreviewContactTextField() {
 }
 
 @Composable
-fun Birthday() {
+fun Birthday(onClick: (() -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,7 +347,9 @@ fun Birthday() {
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))
             )
             .padding(dimensionResource(id = R.dimen.default_padding))
-            .clickable { },
+            .clickable {
+                onClick?.invoke()
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(

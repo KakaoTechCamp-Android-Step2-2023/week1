@@ -26,6 +26,8 @@ import com.kakaotechcamp.step2.week1.CONTACT_PHONE_NUMBER
 import com.kakaotechcamp.step2.week1.GENDER_FEMALE
 import com.kakaotechcamp.step2.week1.GENDER_MALE
 import com.kakaotechcamp.step2.week1.R
+import com.kakaotechcamp.step2.week1.compose.DATE_FORMAT
+import com.kakaotechcamp.step2.week1.compose.DEFAULT_BIRTHDAY
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -178,9 +180,7 @@ class AddContactActivity : AppCompatActivity() {
     }
 
     private fun confirmToFinish() {
-        if (etName.text.isNullOrEmpty() && etPhoneNumber.text.isNullOrEmpty() && etMail.text.isNullOrEmpty() && tvBirthday.text.isNullOrEmpty() && etMemo.text.isNullOrEmpty()) {
-            finish()
-        } else {
+        if (etName.text.isNotEmpty() || etPhoneNumber.text.isNotEmpty() || etMail.text.isNotEmpty() || tvBirthday.text.isNotEmpty() || etMemo.text.isNotEmpty()) {
             AlertDialog.Builder(this).apply {
                 setMessage(R.string.warning_cancel)
                 setPositiveButton(R.string.exit) { _, _ ->
@@ -189,11 +189,8 @@ class AddContactActivity : AppCompatActivity() {
                 setNegativeButton(R.string.write) { _, _ -> }
                 show()
             }
+        } else {
+            finish()
         }
-    }
-
-    companion object {
-        private const val DEFAULT_BIRTHDAY = "2000.01.01"
-        private const val DATE_FORMAT = "yyyy.MM.dd"
     }
 }
