@@ -13,15 +13,30 @@
         android:theme="@style/Theme.Week1"
         tools:targetApi="33">
         <activity
-            android:name=".ContactDetailActivity"
+            android:name=".compose.ComposeContactDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_compose_contact_detail_activity"
+            android:theme="@style/Theme.Week1" />
+        <activity
+            android:name=".compose.ComposeAddContactActivity"
+            android:exported="false"
+            android:label="@string/title_activity_compose_add_contact"
+            android:theme="@style/Theme.Week1" />
+        <activity
+            android:name=".compose.ComposeMainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_compose_main"
+            android:theme="@style/Theme.Week1" />
+        <activity
+            android:name=".xml.ContactDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".AddContactActivity"
+            android:name=".xml.AddContactActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+            android:name=".xml.MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -19,4 +19,8 @@
     <string name="write">작성하기</string>
     <string name="profile_image">프로필 이미지</string>
     <string name="empty_notice">오른쪽 + 버튼을 클릭하여\n연락처를 등록해보세요.</string>
+    <string name="title_activity_compose_main">ComposeMainActivity</string>
+    <string name="title_activity_compose_add_contact">ComposeAddContactActivity</string>
+    <string name="title_activity_compose_contact_detail_activity">ComposeContactDetailActvity
+    </string>
 </resources>

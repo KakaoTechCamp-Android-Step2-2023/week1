@@ -1,4 +1,4 @@
-package com.kakaotechcamp.step2.week1
+package com.kakaotechcamp.step2.week1.xml
 
 import android.os.Bundle
 import android.widget.ImageView
@@ -7,6 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.kakaotechcamp.step2.week1.CONTACT_BIRTHDAY
+import com.kakaotechcamp.step2.week1.CONTACT_DATA
+import com.kakaotechcamp.step2.week1.CONTACT_GENDER
+import com.kakaotechcamp.step2.week1.CONTACT_MAIL
+import com.kakaotechcamp.step2.week1.CONTACT_MEMO
+import com.kakaotechcamp.step2.week1.CONTACT_NAME
+import com.kakaotechcamp.step2.week1.CONTACT_PHONE_NUMBER
+import com.kakaotechcamp.step2.week1.GENDER_FEMALE
+import com.kakaotechcamp.step2.week1.GENDER_MALE
+import com.kakaotechcamp.step2.week1.R
 import org.json.JSONObject
 
 class ContactDetailActivity : AppCompatActivity() {

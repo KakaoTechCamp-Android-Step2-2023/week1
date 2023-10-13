@@ -1,4 +1,4 @@
-package com.kakaotechcamp.step2.week1
+package com.kakaotechcamp.step2.week1.xml
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.kakaotechcamp.step2.week1.CONTACT_NAME
+import com.kakaotechcamp.step2.week1.R
 import org.json.JSONObject
 
 class ContactItemView : LinearLayout {

@@ -1,4 +1,4 @@
-package com.kakaotechcamp.step2.week1
+package com.kakaotechcamp.step2.week1.xml
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.kakaotechcamp.step2.week1.CONTACT_DATA
+import com.kakaotechcamp.step2.week1.R
+import com.kakaotechcamp.step2.week1.compose.ComposeMainActivity
 import org.json.JSONObject
 
 
@@ -29,7 +32,12 @@ class MainActivity : AppCompatActivity(), ContactItemView.OnItemClickListener {
 
     private fun initViews() {
         llContact = findViewById(R.id.ll_contact)
-        tvEmptyNotice = findViewById(R.id.tv_empty_notice)
+        tvEmptyNotice = findViewById<TextView?>(R.id.tv_empty_notice).apply {
+            setOnClickListener {
+                val intent = Intent(context, ComposeMainActivity::class.java)
+                activityResultLauncher.launch(intent)
+            }
+        }
         addBtn = findViewById<FloatingActionButton?>(R.id.fab_add).apply {
             setOnClickListener {
                 val intent = Intent(context, AddContactActivity::class.java)
