@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -80,11 +81,13 @@ class ComposeMainActivity : ComponentActivity() {
                             .verticalScroll(scrollState)
                             .padding(dimensionResource(id = R.dimen.default_padding))
                     ) {
-                        if(contactJsonString.isNotEmpty()) {
-                            JSONObject(contactJsonString).apply {
-                                if (has(CONTACT_NAME)) {
-                                    ContactItem(name = getString(CONTACT_NAME))
-                                }
+                        if (contactJsonString.isNotEmpty()) {
+                            ContactItem(contactJsonString) {
+                                Intent(baseContext, ComposeContactDetailActivity::class.java)
+                                    .apply {
+                                        putExtra(CONTACT_DATA, contactJsonString)
+                                        startActivity(this)
+                                    }
                             }
                         }
                     }
@@ -139,9 +142,17 @@ fun EmptyNoticePreview() {
 }
 
 @Composable
-fun ContactItem(name: String) {
+fun ContactItem(contactJsonString: String, onClick: () -> Unit) {
+    val contactJson = JSONObject(contactJsonString)
+    if (!contactJson.has(CONTACT_NAME)) return
+    val name = contactJson.getString(CONTACT_NAME)
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick.invoke()
+            },
     ) {
         Row(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.small_padding)),
@@ -179,5 +190,5 @@ fun ContactItem(name: String) {
 @Preview
 @Composable
 fun PreviewContactItem() {
-    ContactItem("안녕하세요")
+    ContactItem("안녕하세요") {}
 }
